@@ -1,0 +1,4 @@
+.env
+twitter_clone/.env
+twitter_clone/composer.lock
+twitter_clone/vendor/
