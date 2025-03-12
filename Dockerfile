@@ -15,6 +15,8 @@ RUN a2enmod rewrite
 
 COPY twitter_clone /var/www/html/twitter_clone
 
+WORKDIR /var/www/html/twitter_clone
+
 RUN chown -R www-data:www-data /var/www/html/twitter_clone/public && \
     chmod -R 755 /var/www/html/twitter_clone/public
 
@@ -26,5 +28,9 @@ RUN chown -R www-data:www-data /var/www/html/twitter_clone/var/cache && \
 COPY docker/twitter_clone.conf /etc/apache2/sites-available/twitter_clone.conf
 
 RUN a2ensite twitter_clone.conf
+
+COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+CMD /usr/local/bin/wait-for-it.sh db:3306 --timeout=60 -- php bin/console doctrine:migrations:migrate --no-interaction
 
 EXPOSE 80
